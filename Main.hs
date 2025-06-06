@@ -1,42 +1,20 @@
+
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
-makeGreeting :: String -> String -> String
-makeGreeting salutation person = 
-  let messageWithTrailingSpace = salutation <> " "
-  in messageWithTrailingSpace <> person
+import Network.Wai
+import Network.Wai.Handler.Warp
+import Network.HTTP.Types (status200)
+import qualified Data.ByteString.Lazy.Char8 as L8
 
--- не сте ограничени до една поеменлива в let bindings:
-
-extendedGreeting :: [Char] -> String
-extendedGreeting person =
-    let hello = makeGreeting helloStr person
-        goodDay = makeGreeting "I hope you have a nice afternoon" person
-        goodBye = makeGreeting "See you later" person
-        helloStr = "Hello"
-    in hello <> "\n" <> goodDay <> "\n" <> goodBye
-
--- при тези свързвания от най-високо ниво, сте свободни да препращате към свързвания, които дефинирате по-късно в самия let израз:
-
-extendedGreeting' :: [Char] -> String
-extendedGreeting' person =
-  let joinWithNewLines a b = a <> " " <> b
-      hello = makeGreeting "Hello" person
-      goodbye = makeGreeting "Goodbye" person
-  in joinWithNewLines hello goodbye 
-
--- Хаскел поддържа  recursive let bindings, което значи, че елементите в нашия let може да се отнасят един към друг. Редът няма значение. 
-
-extendedGreeting'' :: [Char] -> String
-extendedGreeting'' person =
-  let joinWithNewLines a b = a <> " " <> b
-      joined = joinWithNewLines hello goodBye
-      hello = makeGreeting "Hello" person
-      goodBye = makeGreeting "Goodbye" person
-  in joined  
-  
-
-
+app :: Application
+app _ respond = respond $ responseLBS
+    status200
+    [("Content-Type", "text/plain")]
+    "Здравей, свят от Haskell уеб сървър!"
 
 main :: IO ()
-main = print $ makeGreeting "Hello" "Evi"
-
+main = do
+    putStrLn "Сървърът стартира на порт 8080..."
+    run 8080 app
