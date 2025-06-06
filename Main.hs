@@ -1,42 +1,32 @@
+
 module Main where
 
-makeGreeting :: String -> String -> String
-makeGreeting salutation person = 
-  let messageWithTrailingSpace = salutation <> " "
-  in messageWithTrailingSpace <> person
+-- Simple calculator parsing expressions like "2 + 3 * 4"
 
--- не сте ограничени до една поеменлива в let bindings:
+import Data.Char (isDigit)
+import Text.Read (readMaybe)
 
-extendedGreeting :: [Char] -> String
-extendedGreeting person =
-    let hello = makeGreeting helloStr person
-        goodDay = makeGreeting "I hope you have a nice afternoon" person
-        goodBye = makeGreeting "See you later" person
-        helloStr = "Hello"
-    in hello <> "\n" <> goodDay <> "\n" <> goodBye
+evaluate :: String -> Maybe Int
+evaluate expr =
+    let tokens = words expr
+    in evalTokens tokens
 
--- при тези свързвания от най-високо ниво, сте свободни да препращате към свързвания, които дефинирате по-късно в самия let израз:
-
-extendedGreeting' :: [Char] -> String
-extendedGreeting' person =
-  let joinWithNewLines a b = a <> " " <> b
-      hello = makeGreeting "Hello" person
-      goodbye = makeGreeting "Goodbye" person
-  in joinWithNewLines hello goodbye 
-
--- Хаскел поддържа  recursive let bindings, което значи, че елементите в нашия let може да се отнасят един към друг. Редът няма значение. 
-
-extendedGreeting'' :: [Char] -> String
-extendedGreeting'' person =
-  let joinWithNewLines a b = a <> " " <> b
-      joined = joinWithNewLines hello goodBye
-      hello = makeGreeting "Hello" person
-      goodBye = makeGreeting "Goodbye" person
-  in joined  
-  
-
-
+evalTokens :: [String] -> Maybe Int
+evalTokens [x] = readMaybe x
+evalTokens (x:"+":y:rest) = do
+    a <- readMaybe x
+    b <- readMaybe y
+    evalTokens (show (a + b) : rest)
+evalTokens (x:"*":y:rest) = do
+    a <- readMaybe x
+    b <- readMaybe y
+    evalTokens (show (a * b) : rest)
+evalTokens _ = Nothing
 
 main :: IO ()
-main = print $ makeGreeting "Hello" "Evi"
-
+main = do
+    putStrLn "Въведете израз (напр. 2 + 3 * 4):"
+    input <- getLine
+    case evaluate input of
+        Just result -> print result
+        Nothing -> putStrLn "Невалиден израз."
