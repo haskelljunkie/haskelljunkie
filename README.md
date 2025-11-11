@@ -1,4 +1,4 @@
-<h1 align="center">Hi 👋, I'm Evgeni Ekimov </h1>
+<h1 align="center">Hi 👋, I'm Yrngve </h1>
 <h3 align="center">🇸🇪 Om mig
 
 Funktionell programmerare med primärt fokus på Haskell och teoretisk datavetenskap.
