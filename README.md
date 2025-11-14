@@ -1,4 +1,4 @@
-<h1 align="center">Здравейте 👋, казвам се Евгени, познат още като Yrngve </h1>
+<h1 align="center">Здравейте 👋, казвам се Евгени a.k.a @haskelljunkie </h1>
 <h3 align="center">🇸🇪 🇬🇧 🇧🇬
 
 **За мен**
